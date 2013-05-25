@@ -13,19 +13,28 @@ class Method(object):
         self.auth = auth
 
     def __call__(self, **kwargs):
-        result = self.method(self.url, data=kwargs)
+        return self.method(
+            self.url,
+            #auth=self.auth,
+            headers={
+                'Accept': 'application/json',
+                'Authorization': ':'.join(self.auth),
+            },
+            data=kwargs,
+        )
 
 
 class EndPoint(object):
 
-    def __init__(self, api, url, auth=None):
+    def __init__(self, api, url):
         self.api = api
         self.url = url
 
     def __getitem__(self, item):
+        url = self.url + '/' if not self.url.endswith('/') else self.url
         return EndPoint(
             self.api,
-            urljoin(self.url, unicode(item)),
+            urljoin(url, unicode(item)),
         )
 
     def __getattr__(self, attr):
@@ -41,5 +50,6 @@ class EndPoint(object):
 class Api(EndPoint):
 
     def __init__(self, base_url, auth=None):
-        super(Api, self).__init__(self, base_url, auth)
+        super(Api, self).__init__(self, base_url)
+        self.auth = auth
 
