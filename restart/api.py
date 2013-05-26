@@ -2,6 +2,7 @@ from urlparse import urljoin
 
 import requests
 
+
 METHODS = ['get', 'post', 'put', 'patch', 'delete', 'options']
 
 
@@ -15,10 +16,9 @@ class Method(object):
     def __call__(self, **kwargs):
         return self.method(
             self.url,
-            #auth=self.auth,
+            auth=self.auth,
             headers={
                 'Accept': 'application/json',
-                'Authorization': ':'.join(self.auth),
             },
             data=kwargs,
         )
