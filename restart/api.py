@@ -1,15 +1,16 @@
+from urllib import quote_plus
 from urlparse import urljoin
 
 import requests
 
 
-METHODS = ['get', 'post', 'put', 'patch', 'delete', 'options']
+METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 
 
 class Method(object):
 
     def __init__(self, method, url, auth):
-        self.method = getattr(requests, method)
+        self.method = getattr(requests, method.lower())
         self.url = url
         self.auth = auth
 
@@ -34,7 +35,7 @@ class EndPoint(object):
         url = self.url + '/' if not self.url.endswith('/') else self.url
         return EndPoint(
             self.api,
-            urljoin(url, unicode(item)),
+            urljoin(url, quote_plus(unicode(item))),
         )
 
     def __getattr__(self, attr):
