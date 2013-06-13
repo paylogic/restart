@@ -1,3 +1,4 @@
+from urllib import quote_plus
 from urlparse import urljoin
 
 import requests
@@ -34,7 +35,7 @@ class EndPoint(object):
         url = self.url + '/' if not self.url.endswith('/') else self.url
         return EndPoint(
             self.api,
-            urljoin(url, unicode(item)),
+            urljoin(url, quote_plus(unicode(item))),
         )
 
     def __getattr__(self, attr):
@@ -53,3 +54,6 @@ class Api(EndPoint):
         super(Api, self).__init__(self, base_url)
         self.auth = auth
 
+    def __call__(self, url):
+        self.url = url
+        return self
