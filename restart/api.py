@@ -15,13 +15,19 @@ class Method(object):
         self.auth = auth
 
     def __call__(self, **kwargs):
+
+        if self.method == requests.get:
+            kw = {'params': kwargs}
+        else:
+            kw = {'data': kwargs}
         return self.method(
             self.url,
             auth=self.auth,
             headers={
                 'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
-            data=kwargs,
+            **kw
         )
 
 
@@ -55,5 +61,4 @@ class Api(EndPoint):
         self.auth = auth
 
     def __call__(self, url):
-        self.url = url
-        return self
+        return EndPoint(self, url)
