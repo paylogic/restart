@@ -1,3 +1,4 @@
+import json
 from urllib import quote_plus
 from urlparse import urljoin
 
@@ -9,17 +10,21 @@ METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 
 class Method(object):
 
-    def __init__(self, method, url, auth):
+    def __init__(self, method, url, auth, serialize_payload):
         self.method = getattr(requests, method.lower())
         self.url = url
         self.auth = auth
+        self.serialize_payload = serialize_payload
 
     def __call__(self, **kwargs):
 
         if self.method == requests.get:
             kw = {'params': kwargs}
         else:
-            kw = {'data': kwargs}
+            data = kwargs
+            if self.serialize_payload:
+                data = json.dumps(data)
+            kw = {'data': data}
         return self.method(
             self.url,
             auth=self.auth,
@@ -50,15 +55,17 @@ class EndPoint(object):
                 method=attr,
                 url=self.url,
                 auth=self.api.auth,
+                serialize_payload=self.api.serialize_payload,
             )
         return self[attr]
 
 
 class Api(EndPoint):
 
-    def __init__(self, base_url, auth=None):
+    def __init__(self, base_url, auth=None, serialize_payload=True):
         super(Api, self).__init__(self, base_url)
         self.auth = auth
+        self.serialize_payload = serialize_payload
 
     def __call__(self, url):
         return EndPoint(self, url)
