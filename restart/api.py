@@ -16,12 +16,12 @@ class Method(object):
         self.auth = auth
         self.serialize_payload = serialize_payload
 
-    def __call__(self, **kwargs):
-
+    def __call__(self, *args, **kwargs):
         if self.method == requests.get:
             kw = {'params': kwargs}
         else:
-            data = kwargs
+            # TODO: assertions for the payload
+            data = args or kwargs
             if self.serialize_payload:
                 data = json.dumps(data)
             kw = {'data': data}
