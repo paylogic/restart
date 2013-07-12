@@ -25,6 +25,7 @@ class Method(object):
             if self.serialize_payload:
                 data = json.dumps(data)
             kw = {'data': data}
+
         return self.method(
             self.url,
             auth=self.auth,
