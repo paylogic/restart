@@ -17,7 +17,7 @@ class Method(object):
         self.serialize_payload = serialize_payload
 
     def __call__(self, *args, **kwargs):
-        if self.method == requests.get:
+        if self.method in (requests.get, requests.options):
             kw = {'params': kwargs}
         else:
             # TODO: assertions for the payload
