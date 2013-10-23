@@ -24,7 +24,7 @@ setup(
     description='Python RESTful HTTP client',
     author='Oleg Pidsadnyi',
     author_email='oleg.podsadny@gmail.com',
-    version='0.3',
+    version='0.4',
     cmdclass={'test': PyTest},
     install_requires=[
         'requests',
