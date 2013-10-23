@@ -29,7 +29,8 @@ class Method(object):
             if self.serialize_payload:
                 data = json.dumps(data)
             kw = {'data': data}
-        self.headers.update(headers)
+        if headers:
+            self.headers.update(headers)
         return self.method(
             self.url,
             auth=self.auth,
