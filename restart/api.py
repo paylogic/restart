@@ -16,7 +16,7 @@ class Method(object):
         self.auth = auth
         self.serialize_payload = serialize_payload
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, headers=None, *args, **kwargs):
         if self.method in (requests.get, requests.options):
             kw = {'params': kwargs}
         else:
@@ -25,13 +25,20 @@ class Method(object):
             if self.serialize_payload:
                 data = json.dumps(data)
             kw = {'data': data}
+
+        if not headers:
+            headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        else:
+            headers['Accept'] = 'application/json'
+            headers['Content-Type'] = 'application/json'
+
         return self.method(
             self.url,
             auth=self.auth,
-            headers={
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+            headers=headers,
             **kw
         )
 
