@@ -54,7 +54,7 @@ class EndPoint(object):
                 url=self.url,
                 auth=self.api.auth,
                 serialize_payload=self.api.serialize_payload,
-                headers=self.api.headers
+                headers=self.api.headers,
             )
         return self[attr]
 
